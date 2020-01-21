@@ -4,6 +4,9 @@ screen = pygame.display.set_mode((800,600))
 BLACK = (0,0,0)
 WHITE = (255,255,255)
 screen_size = pygame.display.get_surface().get_size()
+pygame.display.set_caption(("A* Shortest Pathfinder"))
+icon = pygame.image.load("maze.png")
+pygame.display.set_icon(icon)
 
 scalex = screen_size[0] // 35
 scaley = screen_size[1] // 20
@@ -39,6 +42,8 @@ def draw_env():
                         , 3)
 
     #pygame.draw.polygon(screen, WHITE, ((2*scalex,2*scaley), (4*scalex, 4*scaley), (6*scalex, 6*scaley)), 5)
+    pygame.draw.circle(screen, (0,255,0), (3 * scalex, 18 * scaley), 10)
+    pygame.draw.circle(screen, (255, 0, 0), (35 * scalex, 3 * scaley), 10)
 
 
 draw_env()
