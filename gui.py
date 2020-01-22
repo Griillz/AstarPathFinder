@@ -42,8 +42,8 @@ def draw_env():
                         , 3)
 
     #pygame.draw.polygon(screen, WHITE, ((2*scalex,2*scaley), (4*scalex, 4*scaley), (6*scalex, 6*scaley)), 5)
-    pygame.draw.circle(screen, (0,255,0), (3 * scalex, 18 * scaley), 10)
-    pygame.draw.circle(screen, (255, 0, 0), (35 * scalex, 3 * scaley), 10)
+    pygame.draw.circle(screen, (0,255,0), (3 * scalex, 18 * scaley), screen_size[0] // 100)
+    pygame.draw.circle(screen, (255, 0, 0), (35 * scalex, 3 * scaley), screen_size[0] // 100)
 
 
 draw_env()
