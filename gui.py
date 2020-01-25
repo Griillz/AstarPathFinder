@@ -27,6 +27,7 @@ vertices = [(29 * scalex, 12 * scaley), (31 * scalex, 15 * scaley),(31 * scalex,
             (13 * scalex, 7 * scaley),(15 * scalex, 13 * scaley),(18 * scalex, 11 * scaley),(20 * scalex, 16 * scaley),
             (23 * scalex, 14 * scaley)]
 
+
 edges = [(vertices[0],vertices[1]),(vertices[1],vertices[2]),(vertices[3],vertices[4]),(vertices[4],vertices[5]),
          (vertices[5],vertices[0]),(vertices[6],vertices[7]),(vertices[7],vertices[8]),(vertices[8],vertices[9]),
          (vertices[9],vertices[6]),(vertices[10],vertices[11]),(vertices[11],vertices[12]),(vertices[12],vertices[13]),
