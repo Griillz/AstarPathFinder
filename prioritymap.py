@@ -1,5 +1,6 @@
 import heapq
 
+
 class prioritymap:
     def __init__(self):
         self.queue = {}
@@ -28,12 +29,3 @@ class prioritymap:
 
     def heappop(self):
         return heapq.heappop(self.heap)
-
-
-dict_obj = prioritymap()
-print(dict_obj.isEmpty())
-dict_obj.insert((200, 200), 5)
-print(dict_obj.isEmpty())
-print(dict_obj[(200, 200)])
-
-
