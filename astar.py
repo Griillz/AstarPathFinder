@@ -71,6 +71,10 @@ def perp(a):
 
 
 def seg_intersect(a1, a2, b1, b2):
+    a1 = np.array(a1)
+    a2 = np.array(a2)
+    b1 = np.array(b1)
+    b2 = np.array(b2)
     da = a2 - a1
     db = b2 - b1
     dp = a1 - b1

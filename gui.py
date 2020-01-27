@@ -59,7 +59,6 @@ eight = pygame.draw.polygon(screen, WHITE,
                             , 3)
 start = pygame.draw.circle(screen, (0, 255, 0), (3 * scalex, 18 * scaley), screen_size[0] // 100)
 end = pygame.draw.circle(screen, (255, 0, 0), (35 * scalex, 3 * scaley), screen_size[0] // 100)
-print(eight)
 
 path = astar((3 * scalex, 18 * scaley), (35 * scalex, 3 * scaley), heuristic, edges, vertices)
 while running:
