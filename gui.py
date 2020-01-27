@@ -1,4 +1,6 @@
 import pygame
+import math
+from astar import astar, heuristic
 
 screen = pygame.display.set_mode((800, 600))
 BLACK = (0, 0, 0)
@@ -59,11 +61,12 @@ start = pygame.draw.circle(screen, (0, 255, 0), (3 * scalex, 18 * scaley), scree
 end = pygame.draw.circle(screen, (255, 0, 0), (35 * scalex, 3 * scaley), screen_size[0] // 100)
 print(eight)
 
-
+path = astar((3 * scalex, 18 * scaley), (35 * scalex, 3 * scaley), heuristic, edges, vertices)
 while running:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
+    screen.blit(path)
     pygame.display.update()
