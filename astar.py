@@ -4,6 +4,7 @@ import numpy as np
 from collections import defaultdict
 import pygame
 
+
 def best_path(camefrom, current):
     path = {current}
     while current in camefrom.Keys:
@@ -27,7 +28,8 @@ def astar(start, goal, heuristic_function, edges, vertices):
 
     while len(openset) > 0:
         currentkey, currentmins = openset.min()
-        current = currentmins.pop()
+        currentmins = list(currentmins)
+        current = tuple((currentmins[-1][-2], currentmins[-1][-1]))
         if len(currentmins) == 0:
             openset.pop()
         if current == goal:
@@ -42,19 +44,19 @@ def astar(start, goal, heuristic_function, edges, vertices):
                 fscore[item] = gscore[item] + heuristic_function(item, goal)
                 previous[item] = current
                 if fscore[item] in openset:
-                    openset[fscore[item]].add(item)
+                    openset.insert(fscore[item], item)
                 else:
                     openset.insert(fscore[item], item)
 
     return False
 
+
 def neighbors(current, vertices, edges):
     possible = []
     for vertex in vertices:
-            for edge in edges:
-                if seg_intersect(current, vertex, edge[0], edge[1]):
-                    possible.append(vertex)
-
+        for edge in edges:
+            if not line_intersection((current, vertex), (edge[0], edge[1])):
+                possible.append(vertex)
     return possible
 
 
@@ -70,18 +72,35 @@ def perp(a):
     return b
 
 
-def seg_intersect(a1, a2, b1, b2):
-    a1 = np.array(a1)
-    a2 = np.array(a2)
-    b1 = np.array(b1)
-    b2 = np.array(b2)
-    da = a2 - a1
-    db = b2 - b1
-    dp = a1 - b1
-    dap = perp(da)
-    denom = np.dot(dap, db)
-    num = np.dot(dap, dp)
-    return (num / denom.astype(float)) * db + b1
+def line_intersection(line1, line2):
+    xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
+    ydiff = (line1[0][1] - line1[1][1], line2[0][1] - line2[1][1])
+
+    def det(a, b):
+        return a[0] * b[1] - a[1] * b[0]
+
+    div = det(xdiff, ydiff)
+    if div == 0:
+        return False
+
+    return True
+
+
+# def seg_intersect(a1, a2, b1, b2):
+#   a1 = np.array(a1)
+#   a2 = np.array(a2)
+#   b1 = np.array(b1)
+#   b2 = np.array(b2)
+#   da = a2 - a1
+#   db = b2 - b1
+#   dp = a1 - b1
+#   dap = perp(da)
+#   denom = np.dot(dap, db)
+#   num = np.dot(dap, dp)
+#   if num == 0:
+#       return False
+# return (num / denom.astype(float)) * db + b1
+#   return True
 
 
 def heuristic(current, goal):

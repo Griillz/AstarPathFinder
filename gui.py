@@ -1,10 +1,12 @@
 import pygame
 import math
+WHITE = (255, 255, 255)
+from shape import shape
 from astar import astar, heuristic
 
 screen = pygame.display.set_mode((800, 600))
 BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
+
 screen_size = pygame.display.get_surface().get_size()
 pygame.display.set_caption(("A* Shortest Pathfinder"))
 icon = pygame.image.load("maze.png")
@@ -17,8 +19,11 @@ print(scalex)
 print(scaley)
 pygame.init()
 
-running = True
+shapetest = shape()
+shapetest.draw((29 * scalex, 12 * scaley), (31 * scalex, 15 * scaley),(31 * scalex, 18 * scaley),(29 * scalex, 19 * scaley))
 
+running = True
+"""
 vertices = [(29 * scalex, 12 * scaley), (31 * scalex, 15 * scaley),(31 * scalex, 18 * scaley),(29 * scalex, 19 * scaley),
             (25 * scalex, 18 * scaley),(25 * scalex, 15 * scaley),(5 * scalex, 15 * scaley),(5 * scalex, 19 * scaley),
             (17 * scalex, 19 * scaley),(17 * scalex, 15 * scaley),(7 * scalex, 3 * scaley),(10 * scalex, 8 * scaley),
@@ -61,11 +66,12 @@ start = pygame.draw.circle(screen, (0, 255, 0), (3 * scalex, 18 * scaley), scree
 end = pygame.draw.circle(screen, (255, 0, 0), (35 * scalex, 3 * scaley), screen_size[0] // 100)
 
 path = astar((3 * scalex, 18 * scaley), (35 * scalex, 3 * scaley), heuristic, edges, vertices)
+"""
 while running:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    screen.blit(path)
+    #screen.blit(path)
     pygame.display.update()
