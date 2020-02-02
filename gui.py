@@ -2,6 +2,7 @@ import pygame
 from shape import shape
 import math
 from temporary import scalex, scaley, screen, screen_size
+from astarv2 import dointersect
 
 from astar import astar, heuristic
 
@@ -9,22 +10,27 @@ print(scalex)
 print(scaley)
 pygame.init()
 
-shape1 = shape((29, 12), (31, 15), (31, 18), (29, 19), (25, 18), (25, 15))
-shape1.draw()
-shape2 = shape((5, 15), (5, 19), (17, 19), (17, 15))
-shape2.draw()
-shape3 = shape((7, 3), (10, 8), (8, 13), (4, 12), (3, 8))
-shape3.draw()
-shape4 = shape((23, 3), (23, 11), (28, 11), (28, 3))
-shape4.draw()
-shape5 = shape((31, 3), (34, 5), (33, 13), (29, 5))
-shape5.draw()
-shape6 = shape((20, 3), (22, 5), (16, 8), (16, 4))
-shape6.draw()
-shape7 = shape((11, 13), (13, 7), (15, 13))
-shape7.draw()
-shape8 = shape((18, 11), (20, 16), (23, 14))
-shape8.draw()
+shapes = [
+shape((29, 12), (31, 15), (31, 18), (29, 19), (25, 18), (25, 15)),
+shape((5, 15), (5, 19), (17, 19), (17, 15)),
+    ]
+'''
+shape((7, 3), (10, 8), (8, 13), (4, 12), (3, 8)),
+shape((23, 3), (23, 11), (28, 11), (28, 3)),
+shape((31, 3), (34, 5), (33, 13), (29, 5)),
+shape((20, 3), (22, 5), (16, 8), (16, 4)),
+shape((11, 13), (13, 7), (15, 13)),
+shape((18, 11), (20, 16), (23, 14))
+'''
+
+shape1 = shapes[0]
+shape2 = shapes[1]
+
+print(dointersect(shape1.vertices[3], shape1.vertices[4], shape2.vertices[2], shape1.vertices[2]))
+for shape in shapes:
+    shape.draw()
+
+
 
 running = True
 
