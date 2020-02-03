@@ -31,7 +31,7 @@ def a_star(start, goal, heuristic, vertices, edges, shapes):
         if current == goal:
             return camefrom
 
-        children = genchildren(current, vertices, edges, num)
+        children = genchildren(current, vertices, edges, shapes, num)
         num += 1
         for child in children:
             for closed in closedset:
@@ -52,26 +52,47 @@ def a_star(start, goal, heuristic, vertices, edges, shapes):
     return False
 
 
-def genchildren(current, vertices, edges, num):
+def genchildren(current, vertices, edges, shapes, num):
     possible = []
     for vertex in vertices:
         intersected = False
         permintersect = False
         if current[1] != vertex:
-            if num == 1:
-                pygame.draw.line(screen, WHITE, vertex, current[1], 3)
+            # pygame.draw.line(screen, WHITE, vertex, current[1], 3)
             for edge in edges:
-                if num == 1:
-                    pygame.draw.line(screen, WHITE, edge[0], edge[1])
+                # pygame.draw.line(screen, WHITE, edge[0], edge[1])
                 if intersect(current[1], vertex, edge[0], edge[1]):
                     intersected = True
-                    if vertex == edge[0] or vertex == edge[1]:
-                        intersected = False
+                    if num != 0:
+                        if (vertex in edge or current[1] in edge):
+                            intersected = False
+                            for shape in shapes:
+                                if vertex in shape.vertices and current[1] in shape.vertices:
+                                    if shape.vertices[shape.vertices.index(current[1])] == len(shape.vertices) - 1:
+                                        if not (shape.vertices[0] == vertex or shape.vertices[-2] == vertex):
+                                            intersected = True
+                                    elif not (shape.vertices[shape.vertices.index(current[1]) + 1] == vertex or \
+                                            shape.vertices[shape.vertices.index(current[1]) - 1] == vertex):
+                                        intersected = True
+                        else:
+                            permintersect = True
+                            break
                     else:
-                        permintersect = True
-                        break
+                        intersected = True
+                        if vertex in edge or current[1] in edge:
+                            intersected = False
+                        else:
+                            permintersect = True
+                            break
+                    # elif vertex in edge or current[1] in edge:
+                        # intersected = False
+                        # break
+                    # else:
+                        # permintersect = True
+                        # break
+
                 pygame.display.update()
-                #print("hi")
+                # print("hi")
             if not intersected and not permintersect:
                 possible.append(vertex)
 
@@ -80,6 +101,7 @@ def genchildren(current, vertices, edges, num):
     # elif vertex == edge[0] or vertex == edge[1] and vertex not in possible:
     #    possible.append(vertex)
     #    break
+
 
 '''
 def onsegment(p, q, r):
@@ -117,6 +139,8 @@ def dointersect(p1, q1, p2, q2):
 
     return False
 '''
+
+
 def onSeg(p, q, r):
     if (min(p[0], r[0]) >= q[0] > max(p[0], r[0])) and (min(p[1], r[1]) >= q[1] > max(p[1], r[1])):
         return True

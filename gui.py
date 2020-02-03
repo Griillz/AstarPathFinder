@@ -1,7 +1,7 @@
 import pygame
 from shape import shape
 import math
-from temporary import scalex, scaley, screen, screen_size
+from temporary import scalex, scaley, screen, screen_size, WHITE
 from astarv2 import \
 intersect, a_star, heuristic
 
@@ -24,6 +24,7 @@ edges = []
 shape1 = shapes[0]
 shape2 = shapes[1]
 
+
 #print(dointersect(shape1.vertices[1], shape1.vertices[4], shape2.vertices[2], shape1.vertices[2]))
 for shape in shapes:
     shape.draw()
@@ -32,8 +33,11 @@ for shape in shapes:
     for edge in shape.edges:
         edges.append(edge)
 
-
-#verticesreverted = [x for x[0]//scalex, x[1] // scaley in vertices]
+pygame.draw.line(screen, GREEN, (110, 570), (110, 450), 3)
+pygame.draw.line(screen, GREEN, (110, 570), (374, 570), 3)
+#pygame.draw.line(screen, GREEN, (110, 570), (374, 450), 3)
+#pygame.draw.line(screen, GREEN, (110, 570), (88, 360), 3)
+#pygame.draw.line(screen, GREEN, (110, 570), (66, 240), 3)
 running = True
 
 start = pygame.draw.circle(screen, (0, 255, 0), (3 * scalex, 18 * scaley), screen_size[0] // 100)
