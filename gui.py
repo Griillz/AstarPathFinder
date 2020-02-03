@@ -18,25 +18,31 @@ shape((20, 3), (22, 5), (16, 8), (16, 4)),
 shape((11, 13), (13, 7), (15, 13)),
 shape((18, 11), (20, 16), (23, 14))
 ]
-
+vertices = []
+edges = []
 shape1 = shapes[0]
 shape2 = shapes[1]
 
 #print(dointersect(shape1.vertices[1], shape1.vertices[4], shape2.vertices[2], shape1.vertices[2]))
 for shape in shapes:
     shape.draw()
+    for vertex in shape.vertices:
+        vertices.append(vertex)
+    for edge in shape.edges:
+        edges.append(edge)
 
 
-
+#verticesreverted = [x for x[0]//scalex, x[1] // scaley in vertices]
 running = True
 
 start = pygame.draw.circle(screen, (0, 255, 0), (3 * scalex, 18 * scaley), screen_size[0] // 100)
 end = pygame.draw.circle(screen, (255, 0, 0), (35 * scalex, 3 * scaley), screen_size[0] // 100)
 
-path = a_star((3 * scalex , 18 * scaley), (35 * scalex , 3 * scaley), heuristic, shapes)
 
-if path != False:
-    pygame.draw.lines(screen, GREEN, False, path, 3)
+path = a_star((3 * scalex , 18 * scaley), (35 * scalex , 3 * scaley), heuristic, vertices, edges, shapes)
+
+if path == False:
+   # pygame.draw.lines(screen, GREEN, False, path, 3)
     while running:
 
         for event in pygame.event.get():
