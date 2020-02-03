@@ -63,7 +63,7 @@ def genchildren(current, vertices, edges, num):
             for edge in edges:
                 if num == 1:
                     pygame.draw.line(screen, WHITE, edge[0], edge[1])
-                if dointersect(current[1], vertex, edge[0], edge[1]):
+                if intersect(current[1], vertex, edge[0], edge[1]):
                     intersected = True
                     if vertex == edge[0] or vertex == edge[1]:
                         intersected = False
@@ -81,7 +81,7 @@ def genchildren(current, vertices, edges, num):
     #    possible.append(vertex)
     #    break
 
-
+'''
 def onsegment(p, q, r):
     if p[0] <= max(p[0], r[0]) and q[0] >= min(p[0], r[0]) and \
             q[1] <= max(p[1], r[1]) and q[1] >= min(p[1], r[1]):
@@ -116,7 +116,36 @@ def dointersect(p1, q1, p2, q2):
         return True
 
     return False
+'''
+def onSeg(p, q, r):
+    if (min(p[0], r[0]) >= q[0] > max(p[0], r[0])) and (min(p[1], r[1]) >= q[1] > max(p[1], r[1])):
+        return True
+    return False
 
+
+def ccw(p, q, r):
+    val = ((q[1] - p[1]) * (r[0] - q[0])) - ((q[0] - p[0]) * (r[1] - q[1]))
+    if val == 0:
+        return val
+    return 1 if val > 0 else 2
+
+
+def intersect(p1, p2, p3, p4):
+    ccw1, ccw2, ccw3, ccw4 = ccw(p1, p2, p3), ccw(p1, p2, p4), ccw(p3, p4, p1), ccw(p3, p4, p2)
+
+    if ccw1 != ccw2 and ccw3 != ccw4:
+        return True
+
+    if ccw1 == 0 and onSeg(p1, p3, p2):
+        return True
+    if ccw2 == 0 and onSeg(p1, p4, p2):
+        return True
+    if ccw3 == 0 and onSeg(p3, p1, p4):
+        return True
+    if ccw4 == 0 and onSeg(p3, p2, p4):
+        return True
+
+    return False
 
 
 def cost(current, vertex):

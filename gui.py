@@ -3,7 +3,7 @@ from shape import shape
 import math
 from temporary import scalex, scaley, screen, screen_size
 from astarv2 import \
-dointersect, a_star, heuristic
+intersect, a_star, heuristic
 
 print(scalex)
 print(scaley)
