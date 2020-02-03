@@ -2,7 +2,8 @@ import pygame
 from shape import shape
 import math
 from temporary import scalex, scaley, screen, screen_size
-from astarv2 import dointersect, a_star, heuristic
+from astarv2 import \
+dointersect, a_star, heuristic
 
 print(scalex)
 print(scaley)

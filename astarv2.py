@@ -3,6 +3,7 @@ import pygame
 import math
 import numpy as np
 from collections import defaultdict
+from temporary import screen, WHITE
 
 
 def a_star(start, goal, heuristic, vertices, edges, shapes):
@@ -20,7 +21,7 @@ def a_star(start, goal, heuristic, vertices, edges, shapes):
     fscore = defaultdict(lambda: float('inf'))
 
     fscore[start] = heuristic(start, goal)
-
+    num = 0
     while len(openset) > 0:
         current = heapq.heappop(openset)
         total += current[0]
@@ -30,8 +31,8 @@ def a_star(start, goal, heuristic, vertices, edges, shapes):
         if current == goal:
             return camefrom
 
-        children = genchildren(current, vertices, edges, shapes)
-
+        children = genchildren(current, vertices, edges, num)
+        num += 1
         for child in children:
             for closed in closedset:
                 if child == closed:
@@ -51,24 +52,35 @@ def a_star(start, goal, heuristic, vertices, edges, shapes):
     return False
 
 
-def genchildren(current, vertices, edges, shapes):
+def genchildren(current, vertices, edges, num):
     possible = []
-    intersected = False
     for vertex in vertices:
-        for edge in edges:
-            if dointersect(current[1], vertex, edge[0], edge[1]) and current not in edge and vertex not in edge:
+        intersected = False
+        permintersect = False
+        if current[1] != vertex:
+            if num == 1:
+                pygame.draw.line(screen, WHITE, vertex, current[1], 3)
+            for edge in edges:
+                if num == 1:
+                    pygame.draw.line(screen, WHITE, edge[0], edge[1])
+                if dointersect(current[1], vertex, edge[0], edge[1]):
+                    intersected = True
+                    if vertex == edge[0] or vertex == edge[1]:
+                        intersected = False
+                    else:
+                        permintersect = True
+                        break
+                pygame.display.update()
+                #print("hi")
+            if not intersected and not permintersect:
                 possible.append(vertex)
-                break
 
-    children = []
-    for item in vertices:
-        if item not in possible:
-            children.append(item)
-    return children
+    return possible
 
-            #elif vertex == edge[0] or vertex == edge[1] and vertex not in possible:
-            #    possible.append(vertex)
-            #    break
+    # elif vertex == edge[0] or vertex == edge[1] and vertex not in possible:
+    #    possible.append(vertex)
+    #    break
+
 
 def onsegment(p, q, r):
     if p[0] <= max(p[0], r[0]) and q[0] >= min(p[0], r[0]) and \
