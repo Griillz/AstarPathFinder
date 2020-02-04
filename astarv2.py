@@ -2,9 +2,7 @@ import heapq
 import pygame
 import math
 from node import Node
-import numpy as np
-from collections import defaultdict
-from temporary import screen, WHITE
+from shape import screen
 RED = (255,0,0)
 
 def a_star(start, goal, heuristic, vertices, edges, shapes):

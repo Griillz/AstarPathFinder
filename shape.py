@@ -1,7 +1,9 @@
-import math
 import pygame
-from temporary import screen, scalex, scaley, WHITE
-
+screen = pygame.display.set_mode((800, 600))
+WHITE = (255, 255, 255)
+screen_size = pygame.display.get_surface().get_size()
+scalex = screen_size[0] // 35
+scaley = screen_size[1] // 20
 
 class shape:
     def __init__(self, *args):
