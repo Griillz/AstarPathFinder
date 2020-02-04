@@ -4,9 +4,11 @@ import math
 import time
 from node import Node
 from shape import screen
-RED = (255,0,0)
 
-def a_star(start, goal, heuristic, vertices, edges, shapes):
+RED = (255, 0, 0)
+
+
+def a_star(start, goal, vertices, edges, shapes):
     # Create start and end node
     start_node = Node(None, start)
     start_node.g = start_node.h = start_node.f = 0
@@ -39,8 +41,8 @@ def a_star(start, goal, heuristic, vertices, edges, shapes):
                 path.append(current.position)
                 current = current.parent
             if len(path) > 1:
-                pygame.draw.lines(screen,RED,False,path[::-1],3)
-                time.sleep(.2)
+                pygame.draw.lines(screen, RED, False, path[::-1], 3)
+                time.sleep(.05)
                 pygame.display.update()
 
         # gets points that we can go to
@@ -67,6 +69,7 @@ def a_star(start, goal, heuristic, vertices, edges, shapes):
 
     return False
 
+
 def genchildren(current, vertices, edges, shapes, num):
     possible = []
     for vertex in vertices:
@@ -86,8 +89,8 @@ def genchildren(current, vertices, edges, shapes, num):
                                     if shape.vertices.index(current.position) == len(shape.vertices) - 1:
                                         if not (shape.vertices[0] == vertex or shape.vertices[-2] == vertex):
                                             intersected = True
-                                    elif not (shape.vertices[shape.vertices.index(current.position)+1] == vertex or \
-                                            shape.vertices[shape.vertices.index(current.position)-1] == vertex):
+                                    elif not (shape.vertices[shape.vertices.index(current.position) + 1] == vertex or \
+                                              shape.vertices[shape.vertices.index(current.position) - 1] == vertex):
                                         intersected = True
                         else:
                             permintersect = True
@@ -104,6 +107,8 @@ def genchildren(current, vertices, edges, shapes, num):
                 possible.append(vertex)
 
     return possible
+
+
 def onSeg(p, q, r):
     if (min(p[0], r[0]) >= q[0] > max(p[0], r[0])) and (min(p[1], r[1]) >= q[1] > max(p[1], r[1])):
         return True
