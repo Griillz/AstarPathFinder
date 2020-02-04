@@ -27,7 +27,7 @@ shape((11, 12), (13, 6), (15, 12)),
 shape((18, 13), (20, 18), (23, 16))
 ]
 
-vertices = []
+vertices = [ ]
 edges = []
 shape1 = shapes[0]
 shape2 = shapes[1]
