@@ -20,20 +20,20 @@ shapes = [
     shape((5, 15), (5, 19), (17, 19), (17, 15)),
     shape((7, 3), (10, 8), (8, 13), (4, 12), (3, 8)),
     shape((23, 3), (23, 11), (28, 11), (28, 3)),
-    shape((31, 3), (34, 5), (33, 13), (29, 5)),
+    shape((31, 3), (33, 5), (32, 13), (29, 5)),
     shape((18, 3), (19, 5), (16, 8), (16, 4)),
     shape((11, 12), (13, 6), (15, 12)),
     shape((18, 13), (20, 18), (23, 16))
 ]
 
-start_fixed = ((3 * scalex, 18 * scaley))
-end_fixed = ((35 * scalex, 3 * scaley))
+start_fixed = ((2 * scalex, 18 * scaley))
+end_fixed = ((34 * scalex, 3 * scaley))
 
 
 startrand = random.randint(1,19)
 endrand = random.randint(1,19)
-start = (3 * scalex, startrand * scaley)
-end = (35 * scalex, endrand * scaley)
+start = (2 * scalex, startrand * scaley)
+end = (34 * scalex, endrand * scaley)
 vertices = []
 edges = []
 shape1 = shapes[0]
