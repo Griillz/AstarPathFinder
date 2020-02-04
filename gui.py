@@ -33,8 +33,8 @@ for shape in shapes:
     for edge in shape.edges:
         edges.append(edge)
 
-pygame.draw.line(screen, GREEN, (110, 570), (110, 450), 3)
-pygame.draw.line(screen, GREEN, (110, 570), (374, 570), 3)
+#pygame.draw.line(screen, GREEN, (110, 570), (110, 450), 3)
+#pygame.draw.line(screen, GREEN, (110, 570), (374, 570), 3)
 #pygame.draw.line(screen, GREEN, (110, 570), (374, 450), 3)
 #pygame.draw.line(screen, GREEN, (110, 570), (88, 360), 3)
 #pygame.draw.line(screen, GREEN, (110, 570), (66, 240), 3)
@@ -42,10 +42,10 @@ running = True
 
 start = pygame.draw.circle(screen, (0, 255, 0), (3 * scalex, 18 * scaley), screen_size[0] // 100)
 end = pygame.draw.circle(screen, (255, 0, 0), (35 * scalex, 3 * scaley), screen_size[0] // 100)
-
+vertices.append((35 * scalex, 3 * scaley))
 
 path = a_star((3 * scalex , 18 * scaley), (35 * scalex , 3 * scaley), heuristic, vertices, edges, shapes)
-
+pygame.draw.lines(screen, GREEN, False, path, 3)
 while running:
 
     for event in pygame.event.get():
@@ -55,4 +55,4 @@ while running:
         # screen.blit(path)
         pygame.display.update()
 #if path == False:
-   # pygame.draw.lines(screen, GREEN, False, path, 3)
+

@@ -35,7 +35,7 @@ def a_star(start, goal, heuristic, vertices, edges, shapes):
             return path[::-1]
 
         # gets points that we can go to
-        children = genchildren(current_node, vertices, edges, shapes, num)
+        children = genchildren(current_node, vertices, edges, shapes)
         num += 1
 
         # add children nodes to open list
@@ -45,7 +45,7 @@ def a_star(start, goal, heuristic, vertices, edges, shapes):
             child_node.g = cost(current_node.position, point) + current_node.g
             child_node.h = cost(point, end_node.position)
             child_node.f = child_node.g + child_node.h
-            heapq.heappush(openset, (child_node.f, child_node))
+
 
             # check if node in open or closed list
             for node in openset:
@@ -56,46 +56,31 @@ def a_star(start, goal, heuristic, vertices, edges, shapes):
                 if child_node == node:
                     continue
 
-    return False
+            heapq.heappush(openset, (child_node.f, child_node))
 
-def genchildren(current, vertices, edges, shapes, num):
+def genchildren(node, vertices, edges, shapes):
     possible = []
     for vertex in vertices:
         intersected = False
-        permintersect = False
-        if current.position != vertex:
-            # pygame.draw.line(screen, WHITE, vertex, current[1], 3)
-            for edge in edges:
-                # pygame.draw.line(screen, WHITE, edge[0], edge[1])
-                if intersect(current.position, vertex, edge[0], edge[1]):
-                    intersected = True
-                    if num != 0:
-                        if (vertex in edge or current.position in edge):
-                            intersected = False
-                            for shape in shapes:
-                                if vertex in shape.vertices and current.position in shape.vertices:
-                                    if shape.vertices.index(current.position) == len(shape.vertices) - 1:
-                                        if not (shape.vertices[0] == vertex or shape.vertices[-2] == vertex):
-                                            intersected = True
-                                    elif not (shape.vertices.index(current.position) + 1 == vertex or \
-                                            shape.vertices.index(current.position) - 1 == vertex):
-                                        intersected = True
-                        else:
-                            permintersect = True
-                            break
-                    else:
-                        intersected = True
-                        if vertex in edge or current.position in edge:
-                            intersected = False
-                        else:
-                            permintersect = True
-                            break
-
-                pygame.display.update()
-            if not intersected and not permintersect:
+        for edge in edges:
+            # check if intersects
+            if intersect(node.position, vertex, edge[0], edge[1]) and vertex not in edge and node.position not in edge:
+                intersected = True
+        if not intersected and node.position != vertex:
+            # check if point is in shape and adjacent
+            dissects_shape = False
+            for shape in shapes:
+                if vertex in shape.vertices and node.position in shape.vertices:
+                    if vertex == shape.vertices[-1]:
+                        if not(node.position == shape.vertices[-2] or node.position == shape.vertices[0]) and vertex not in possible:
+                            dissects_shape = True
+                    elif not(node.position == shape.vertices[shape.vertices.index(vertex)+1] or node.position == shape.vertices[shape.vertices.index(vertex)-1]):
+                        dissects_shape = True
+            if vertex not in possible and not dissects_shape:
                 possible.append(vertex)
-
     return possible
+
+
 def onSeg(p, q, r):
     if (min(p[0], r[0]) >= q[0] > max(p[0], r[0])) and (min(p[1], r[1]) >= q[1] > max(p[1], r[1])):
         return True
@@ -128,10 +113,8 @@ def intersect(p1, p2, p3, p4):
 
 
 def cost(current, vertex):
-    price = math.sqrt(math.pow((current[0] - vertex[0]), 2) + math.pow((current[1] - vertex[1]), 2))
-    return price
+    return math.sqrt(((current[0] - vertex[0]) ** 2) + ((current[1] - vertex[1]) ** 2))
 
 
 def heuristic(current, goal):
-    h_score = math.sqrt(math.pow((goal[0] - current[0]), 2) + math.pow((goal[1] - current[1]), 2))
-    return h_score
+    return math.sqrt(((current[0] - goal[0]) ** 2) + ((current[1] - goal[1]) ** 2))
