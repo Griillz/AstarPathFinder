@@ -46,13 +46,13 @@ end = pygame.draw.circle(screen, (255, 0, 0), (35 * scalex, 3 * scaley), screen_
 
 path = a_star((3 * scalex , 18 * scaley), (35 * scalex , 3 * scaley), heuristic, vertices, edges, shapes)
 
-if path == False:
+while running:
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+        # screen.blit(path)
+        pygame.display.update()
+#if path == False:
    # pygame.draw.lines(screen, GREEN, False, path, 3)
-    while running:
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-            # screen.blit(path)
-            pygame.display.update()
