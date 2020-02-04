@@ -1,6 +1,7 @@
 import heapq
 import pygame
 import math
+import time
 from node import Node
 from shape import screen
 RED = (255,0,0)
@@ -39,6 +40,8 @@ def a_star(start, goal, heuristic, vertices, edges, shapes):
                 current = current.parent
             if len(path) > 1:
                 pygame.draw.lines(screen,RED,False,path[::-1],3)
+                time.sleep(.2)
+                pygame.display.update()
 
         # gets points that we can go to
         children = genchildren(current_node, vertices, edges, shapes, num)
@@ -97,7 +100,6 @@ def genchildren(current, vertices, edges, shapes, num):
                             permintersect = True
                             break
 
-                pygame.display.update()
             if not intersected and not permintersect:
                 possible.append(vertex)
 

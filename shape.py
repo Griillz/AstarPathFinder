@@ -1,5 +1,5 @@
 import pygame
-screen = pygame.display.set_mode((800, 600))
+screen = pygame.display.set_mode((1100, 600))
 WHITE = (255, 255, 255)
 screen_size = pygame.display.get_surface().get_size()
 scalex = screen_size[0] // 35
