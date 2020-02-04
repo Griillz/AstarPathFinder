@@ -4,6 +4,7 @@ import math
 from temporary import scalex, scaley, screen, screen_size, WHITE
 from astarv2 import \
 intersect, a_star, heuristic
+import time
 
 print(scalex)
 print(scaley)
@@ -45,6 +46,11 @@ end = pygame.draw.circle(screen, (255, 0, 0), (35 * scalex, 3 * scaley), screen_
 vertices.append((35 * scalex, 3 * scaley))
 print("hi")
 path = a_star((3 * scalex , 18 * scaley), (35 * scalex , 3 * scaley), heuristic, vertices, edges, shapes)
+screen.fill((0,0,0))
+start = pygame.draw.circle(screen, (0, 255, 0), (3 * scalex, 18 * scaley), screen_size[0] // 100)
+end = pygame.draw.circle(screen, (255, 0, 0), (35 * scalex, 3 * scaley), screen_size[0] // 100)
+for shape in shapes:
+    shape.draw()
 pygame.draw.lines(screen, GREEN, False, path, 3)
 while running:
 
@@ -54,5 +60,4 @@ while running:
 
         # screen.blit(path)
         pygame.display.update()
-#if path == False:
 
