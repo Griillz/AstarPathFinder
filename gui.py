@@ -4,6 +4,7 @@ from astarv2 import a_star
 import time
 import random
 
+#Constants for certain RGB colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -15,6 +16,7 @@ pygame.display.set_icon(icon)
 
 pygame.init()
 
+#List of different shape objects
 shapes = [
     shape((29, 12), (31, 15), (31, 18), (29, 19), (25, 18), (25, 15)),
     shape((5, 15), (5, 19), (17, 19), (17, 15)),
@@ -26,6 +28,7 @@ shapes = [
     shape((18, 13), (20, 18), (23, 16))
 ]
 
+#Fixed starting and ending locations
 start_fixed = ((2 * scalex, 18 * scaley))
 end_fixed = ((34 * scalex, 3 * scaley))
 
@@ -34,11 +37,13 @@ startrand = random.randint(1,19)
 endrand = random.randint(1,19)
 start = (2 * scalex, startrand * scaley)
 end = (34 * scalex, endrand * scaley)
-vertices = []
-edges = []
+
+#List of all vertices and edges for all shapes
+vertices, edges = [], []
 shape1 = shapes[0]
 shape2 = shapes[1]
 
+#Loop through shapes and draw to screen
 for shape in shapes:
     shape.draw()
     for vertex in shape.vertices:
@@ -48,13 +53,22 @@ for shape in shapes:
 
 running = True
 
+#Draws start and end circles
 pygame.draw.circle(screen, (0, 255, 0), start, screen_size[0] // 100)
 pygame.draw.circle(screen, (255, 0, 0), end, screen_size[0] // 100)
+
+#Adds goal location to vertices list so it can be explored
 vertices.append(end)
-print("hi")
+
+#Runs the astar algorithm and stores the best path in a variable
 path = a_star(start, end, vertices, edges, shapes)
+
+#Draws the best path to the screen
 pygame.draw.lines(screen, GREEN, False, path, 3)
 pygame.display.update()
+
+#Leaves best path on screen along with all other paths the algorithm tried to take for three seconds,
+#Then redraws the shapes along with only the best paths
 time.sleep(3)
 screen.fill((0, 0, 0))
 pygame.draw.circle(screen, (0, 255, 0), start, screen_size[0] // 100)
@@ -64,6 +78,7 @@ for shape in shapes:
 pygame.draw.lines(screen, GREEN, False, path, 3)
 pygame.display.update()
 
+#Infinite pygame loop
 while running:
 
     for event in pygame.event.get():

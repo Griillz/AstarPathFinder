@@ -7,7 +7,7 @@ from shape import screen
 
 RED = (255, 0, 0)
 
-
+#Main a star algorithm
 def a_star(start, goal, vertices, edges, shapes):
     # Create start and end node
     start_node = Node(None, start)
@@ -18,9 +18,11 @@ def a_star(start, goal, vertices, edges, shapes):
     # Initialize both open and closed list
     openset, closedset = [], []
 
-    # Add the start node
+    # pushes start node onto the open set
     heapq.heappush(openset, (start_node.f, start_node))
     num = 0
+
+    #Expands nodes in open set until there are none left, or the goal is reached
     while len(openset) > 0:
         # Get the current node
         current_node = heapq.heappop(openset)[1]
@@ -42,10 +44,10 @@ def a_star(start, goal, vertices, edges, shapes):
                 current = current.parent
             if len(path) > 1:
                 pygame.draw.lines(screen, RED, False, path[::-1], 3)
-                time.sleep(.05)
+                #time.sleep(.05)
                 pygame.display.update()
 
-        # gets points that we can go to
+        # gets list of vertices we can travel to from current position
         children = genchildren(current_node, vertices, edges, shapes, num)
         num += 1
 
