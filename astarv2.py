@@ -24,19 +24,22 @@ def a_star(start, goal, vertices, edges, shapes):
 
     #Expands nodes in open set until there are none left, or the goal is reached
     while len(openset) > 0:
-        # Get the current node
+        # Get the current node with the lowest F score
         current_node = heapq.heappop(openset)[1]
         closedset.append(current_node)
 
-        # found the end
+        # Base case for finding the goal as a possible child
         if current_node == end_node:
             path = []
             current = current_node
+            #Loops through the parents of the nodes back to the starting node
             while current is not None:
                 path.append(current.position)
                 current = current.parent
+            #Returns the best path to the gui file, and then draws to the screen
             return path[::-1]
         else:
+            #Draws the current path being explored in red to make it look cooler
             path = []
             current = current_node
             while current is not None:
@@ -71,21 +74,33 @@ def a_star(start, goal, vertices, edges, shapes):
 
     return False
 
-
+#Function for getting all possible children we can travel to at the current positionm
 def genchildren(current, vertices, edges, shapes, num):
     possible = []
+    #Loops through all vertices
     for vertex in vertices:
+        #Flag for intersecting
         intersected = False
+        #Flag that if set to true, will cause us to break out of the loop because we know we can not travel to this
+        #specific vertex
         permintersect = False
         if current.position != vertex:
-            # pygame.draw.line(screen, WHITE, vertex, current[1], 3)
+            #Loops through edges
             for edge in edges:
-                # pygame.draw.line(screen, WHITE, edge[0], edge[1])
+                #Checks if the line segment intersects with current edge
                 if intersect(current.position, vertex, edge[0], edge[1]):
+                    #Sets to true if there is an intersection
                     intersected = True
+                    #Flag for first iteration
                     if num != 0:
+                        #If the point we intersected is a vertex, reset the intersected flag to false, as we know that
+                        #We can travel to vertices
                         if (vertex in edge or current.position in edge):
                             intersected = False
+                            #Loops through each shape and checks if the point we interesected with is on the same shape
+                            #As our current position, if it is, we check if it is an adjacent vertex. If it is not am
+                            # adjacent vertex, we reset the intersected flag to true again, because that means we have
+                            #Traveled through the shape which is not allowed
                             for shape in shapes:
                                 if vertex in shape.vertices and current.position in shape.vertices:
                                     if shape.vertices.index(current.position) == len(shape.vertices) - 1:
@@ -104,14 +119,14 @@ def genchildren(current, vertices, edges, shapes, num):
                         else:
                             permintersect = True
                             break
-
+            #Conditions needed for adding a vertex as a possible path to be taken
             if not intersected and not permintersect:
                 possible.append(vertex)
 
     return possible
 
 
-def onSeg(p, q, r):
+def onsegment(p, q, r):
     if (min(p[0], r[0]) >= q[0] > max(p[0], r[0])) and (min(p[1], r[1]) >= q[1] > max(p[1], r[1])):
         return True
     return False
@@ -130,13 +145,13 @@ def intersect(p1, p2, p3, p4):
     if ccw1 != ccw2 and ccw3 != ccw4:
         return True
 
-    if ccw1 == 0 and onSeg(p1, p3, p2):
+    if ccw1 == 0 and onsegment(p1, p3, p2):
         return True
-    if ccw2 == 0 and onSeg(p1, p4, p2):
+    if ccw2 == 0 and onsegment(p1, p4, p2):
         return True
-    if ccw3 == 0 and onSeg(p3, p1, p4):
+    if ccw3 == 0 and onsegment(p3, p1, p4):
         return True
-    if ccw4 == 0 and onSeg(p3, p2, p4):
+    if ccw4 == 0 and onsegment(p3, p2, p4):
         return True
 
     return False
