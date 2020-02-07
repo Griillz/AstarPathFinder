@@ -141,18 +141,18 @@ def orientation(p, q, r):
 
 
 def intersect(p1, p2, p3, p4):
-    ccw1, ccw2, ccw3, ccw4 = orientation(p1, p2, p3), orientation(p1, p2, p4), orientation(p3, p4, p1), orientation(p3, p4, p2)
+    o1, o2, o3, o4 = orientation(p1, p2, p3), orientation(p1, p2, p4), orientation(p3, p4, p1), orientation(p3, p4, p2)
 
-    if ccw1 != ccw2 and ccw3 != ccw4:
+    if o1 != o2 and o3 != o4:
         return True
 
-    if ccw1 == 0 and onsegment(p1, p3, p2):
+    if o1 == 0 and onsegment(p1, p3, p2):
         return True
-    if ccw2 == 0 and onsegment(p1, p4, p2):
+    if o2 == 0 and onsegment(p1, p4, p2):
         return True
-    if ccw3 == 0 and onsegment(p3, p1, p4):
+    if o3 == 0 and onsegment(p3, p1, p4):
         return True
-    if ccw4 == 0 and onsegment(p3, p2, p4):
+    if o4 == 0 and onsegment(p3, p2, p4):
         return True
 
     return False
