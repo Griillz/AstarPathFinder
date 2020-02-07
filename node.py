@@ -1,3 +1,4 @@
+#Node class used for storing parent, g score, h score, f score
 class Node:
     def __init__(self, parent=None, position=None):
         self.parent = parent

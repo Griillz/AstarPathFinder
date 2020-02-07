@@ -54,14 +54,14 @@ for shape in shapes:
 running = True
 
 #Draws start and end circles
-pygame.draw.circle(screen, (0, 255, 0), start, screen_size[0] // 100)
-pygame.draw.circle(screen, (255, 0, 0), end, screen_size[0] // 100)
+pygame.draw.circle(screen, (0, 255, 0), start_fixed, screen_size[0] // 100)
+pygame.draw.circle(screen, (255, 0, 0), end_fixed, screen_size[0] // 100)
 
 #Adds goal location to vertices list so it can be explored
-vertices.append(end)
+vertices.append(end_fixed)
 
 #Runs the astar algorithm and stores the best path in a variable
-path = a_star(start, end, vertices, edges, shapes)
+path = a_star(start_fixed, end_fixed, vertices, edges, shapes)
 
 #Draws the best path to the screen
 pygame.draw.lines(screen, GREEN, False, path, 3)
@@ -71,8 +71,8 @@ pygame.display.update()
 #Then redraws the shapes along with only the best paths
 time.sleep(3)
 screen.fill((0, 0, 0))
-pygame.draw.circle(screen, (0, 255, 0), start, screen_size[0] // 100)
-pygame.draw.circle(screen, (255, 0, 0), end, screen_size[0] // 100)
+pygame.draw.circle(screen, (0, 255, 0), start_fixed, screen_size[0] // 100)
+pygame.draw.circle(screen, (255, 0, 0), end_fixed, screen_size[0] // 100)
 for shape in shapes:
     shape.draw()
 pygame.draw.lines(screen, GREEN, False, path, 3)

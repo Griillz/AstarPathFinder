@@ -54,7 +54,7 @@ def a_star(start, goal, vertices, edges, shapes):
         children = genchildren(current_node, vertices, edges, shapes, num)
         num += 1
 
-        # add children nodes to open list
+        # add children nodes to open set
         for point in children:
             child_node = Node(current_node, point)
             # calculate scores
@@ -62,7 +62,7 @@ def a_star(start, goal, vertices, edges, shapes):
             child_node.h = cost(point, end_node.position)
             child_node.f = child_node.g + child_node.h
 
-            # check if node in open or closed list
+            # check if node in open or closed set
             for node in openset:
                 if child_node == node[1] and child_node.g > node[1].g:
                     continue
@@ -125,14 +125,15 @@ def genchildren(current, vertices, edges, shapes, num):
 
     return possible
 
-
+#Next three functions work together in determining if a line segment intersects another, using orientation of three
+#Points as the check.
 def onsegment(p, q, r):
     if (min(p[0], r[0]) >= q[0] > max(p[0], r[0])) and (min(p[1], r[1]) >= q[1] > max(p[1], r[1])):
         return True
     return False
 
 
-def ccw(p, q, r):
+def orientation(p, q, r):
     val = ((q[1] - p[1]) * (r[0] - q[0])) - ((q[0] - p[0]) * (r[1] - q[1]))
     if val == 0:
         return val
@@ -140,7 +141,7 @@ def ccw(p, q, r):
 
 
 def intersect(p1, p2, p3, p4):
-    ccw1, ccw2, ccw3, ccw4 = ccw(p1, p2, p3), ccw(p1, p2, p4), ccw(p3, p4, p1), ccw(p3, p4, p2)
+    ccw1, ccw2, ccw3, ccw4 = orientation(p1, p2, p3), orientation(p1, p2, p4), orientation(p3, p4, p1), orientation(p3, p4, p2)
 
     if ccw1 != ccw2 and ccw3 != ccw4:
         return True
@@ -156,12 +157,12 @@ def intersect(p1, p2, p3, p4):
 
     return False
 
-
+#Cost function for g scores
 def cost(current, vertex):
     price = math.sqrt(math.pow((current[0] - vertex[0]), 2) + math.pow((current[1] - vertex[1]), 2))
     return price
 
-
+#Heuristic function
 def heuristic(current, goal):
     h_score = math.sqrt(math.pow((goal[0] - current[0]), 2) + math.pow((goal[1] - current[1]), 2))
     return h_score
