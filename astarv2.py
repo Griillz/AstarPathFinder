@@ -7,8 +7,9 @@ from shape import screen
 
 RED = (255, 0, 0)
 
-#Main a star algorithm
-def a_star(start, goal, vertices, edges, shapes):
+
+# Main a star algorithm
+def a_star(start, goal, vertices, edges, shapes, restraint):
     # Create start and end node
     start_node = Node(None, start)
     start_node.g = start_node.h = start_node.f = 0
@@ -22,7 +23,7 @@ def a_star(start, goal, vertices, edges, shapes):
     heapq.heappush(openset, (start_node.f, start_node))
     num = 0
 
-    #Expands nodes in open set until there are none left, or the goal is reached
+    # Expands nodes in open set until there are none left, or the goal is reached
     while len(openset) > 0:
         # Get the current node with the lowest F score
         current_node = heapq.heappop(openset)[1]
@@ -32,22 +33,23 @@ def a_star(start, goal, vertices, edges, shapes):
         if current_node == end_node:
             path = []
             current = current_node
-            #Loops through the parents of the nodes back to the starting node
+            # Loops through the parents of the nodes back to the starting node
             while current is not None:
                 path.append(current.position)
                 current = current.parent
-            #Returns the best path to the gui file, and then draws to the screen
+            # Returns the best path to the gui file, and then draws to the screen
             return path[::-1]
         else:
-            #Draws the current path being explored in red to make it look cooler
+            # Draws the current path being explored in red to make it look cooler
             path = []
+            pygame.event.pump()
             current = current_node
             while current is not None:
                 path.append(current.position)
                 current = current.parent
             if len(path) > 1:
                 pygame.draw.lines(screen, RED, False, path[::-1], 3)
-                #time.sleep(.05)
+                time.sleep(.2)
                 pygame.display.update()
 
         # gets list of vertices we can travel to from current position
@@ -61,46 +63,48 @@ def a_star(start, goal, vertices, edges, shapes):
             child_node.g = cost(current_node.position, point) + current_node.g
             child_node.h = cost(point, end_node.position)
             child_node.f = child_node.g + child_node.h
+            if child_node.f <= restraint:
+                # check if node in open or closed set
+                for node in openset:
+                    if child_node == node[1] and child_node.g > node[1].g:
+                        continue
 
-            # check if node in open or closed set
-            for node in openset:
-                if child_node == node[1] and child_node.g > node[1].g:
-                    continue
+                for node in closedset:
+                    if child_node == node:
+                        continue
+                heapq.heappush(openset, (child_node.f, child_node))
 
-            for node in closedset:
-                if child_node == node:
-                    continue
-            heapq.heappush(openset, (child_node.f, child_node))
 
-    return False
+    return []
 
-#Function for getting all possible children we can travel to at the current positionm
+
+# Function for getting all possible children we can travel to at the current position
 def genchildren(current, vertices, edges, shapes, num):
     possible = []
-    #Loops through all vertices
+    # Loops through all vertices
     for vertex in vertices:
-        #Flag for intersecting
+        # Flag for intersecting
         intersected = False
-        #Flag that if set to true, will cause us to break out of the loop because we know we can not travel to this
-        #specific vertex
+        # Flag that if set to true, will cause us to break out of the loop because we know we can not travel to this
+        # specific vertex
         permintersect = False
         if current.position != vertex:
-            #Loops through edges
+            # Loops through edges
             for edge in edges:
-                #Checks if the line segment intersects with current edge
+                # Checks if the line segment intersects with current edge
                 if intersect(current.position, vertex, edge[0], edge[1]):
-                    #Sets to true if there is an intersection
+                    # Sets to true if there is an intersection
                     intersected = True
-                    #Flag for first iteration
+                    # Flag for first iteration
                     if num != 0:
-                        #If the point we intersected is a vertex, reset the intersected flag to false, as we know that
-                        #We can travel to vertices
+                        # If the point we intersected is a vertex, reset the intersected flag to false, as we know that
+                        # We can travel to vertices
                         if (vertex in edge or current.position in edge):
                             intersected = False
-                            #Loops through each shape and checks if the point we interesected with is on the same shape
-                            #As our current position, if it is, we check if it is an adjacent vertex. If it is not am
+                            # Loops through each shape and checks if the point we intersected with is on the same shape
+                            # As our current position, if it is, we check if it is an adjacent vertex. If it is not am
                             # adjacent vertex, we reset the intersected flag to true again, because that means we have
-                            #Traveled through the shape which is not allowed
+                            # Traveled through the shape which is not allowed
                             for shape in shapes:
                                 if vertex in shape.vertices and current.position in shape.vertices:
                                     if shape.vertices.index(current.position) == len(shape.vertices) - 1:
@@ -119,14 +123,15 @@ def genchildren(current, vertices, edges, shapes, num):
                         else:
                             permintersect = True
                             break
-            #Conditions needed for adding a vertex as a possible path to be taken
+            # Conditions needed for adding a vertex as a possible path to be taken
             if not intersected and not permintersect:
                 possible.append(vertex)
 
     return possible
 
-#Next three functions work together in determining if a line segment intersects another, using orientation of three
-#Points as the check.
+
+# Next three functions work together in determining if a line segment intersects another, using orientation of three
+# Points as the check.
 def onsegment(p, q, r):
     if (min(p[0], r[0]) >= q[0] > max(p[0], r[0])) and (min(p[1], r[1]) >= q[1] > max(p[1], r[1])):
         return True
@@ -157,12 +162,14 @@ def intersect(p1, p2, p3, p4):
 
     return False
 
-#Cost function for g scores
+
+# Cost function for g scores
 def cost(current, vertex):
     price = math.sqrt(math.pow((current[0] - vertex[0]), 2) + math.pow((current[1] - vertex[1]), 2))
     return price
 
-#Heuristic function
+
+# Heuristic function
 def heuristic(current, goal):
     h_score = math.sqrt(math.pow((goal[0] - current[0]), 2) + math.pow((goal[1] - current[1]), 2))
     return h_score
