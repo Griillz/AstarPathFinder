@@ -42,6 +42,7 @@ def a_star(start, goal, vertices, edges, shapes, restraint):
         else:
             # Draws the current path being explored in red to make it look cooler
             path = []
+            # Pump makes it so windows doesn't think the program is not responding
             pygame.event.pump()
             current = current_node
             while current is not None:
@@ -49,7 +50,7 @@ def a_star(start, goal, vertices, edges, shapes, restraint):
                 current = current.parent
             if len(path) > 1:
                 pygame.draw.lines(screen, RED, False, path[::-1], 3)
-                time.sleep(.2)
+                time.sleep(.05)
                 pygame.display.update()
 
         # gets list of vertices we can travel to from current position
