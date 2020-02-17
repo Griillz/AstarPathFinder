@@ -50,7 +50,7 @@ def a_star(start, goal, vertices, edges, shapes, restraint):
                 current = current.parent
             if len(path) > 1:
                 pygame.draw.lines(screen, RED, False, path[::-1], 3)
-                time.sleep(.05)
+                time.sleep(.15)
                 pygame.display.update()
 
         # gets list of vertices we can travel to from current position

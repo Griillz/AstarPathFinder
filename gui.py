@@ -19,8 +19,11 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 
 # Fixed starting and ending locations
-start_fixed = ((2 * scalex, 18 * scaley))
-end_fixed = ((34 * scalex, 3 * scaley))
+start1 = ((2 * scalex, 18 * scaley))
+end1 = ((34 * scalex, 3 * scaley))
+
+start2 = ((3 * scalex, 15 * scaley))
+end2 = ((33 * scalex, 5 * scaley))
 
 # Random starting and ending locations
 startrand = random.randint(1, 19)
@@ -40,61 +43,79 @@ shapes = [
     shape((18, 13), (20, 18), (23, 16))
 ]
 
+shapes2 = [
+    shape((5, 5), (10, 4), (15, 5), (13, 8), (10, 10), (10, 7), (5, 7)),
+    shape((5, 9), (5, 13), (7, 13)),
+    shape((5, 17), (15, 17), (15, 19), (5, 19)),
+    shape((10, 15), (15, 10), (17, 5), (20, 10), (15, 15)),
+    shape((20, 5), (21, 1), (26, 5)),
+    shape((20, 19), (23, 10), (26, 7), (26, 18)),
+    shape((28, 12), (30, 3), (31, 7), (33, 7), (33, 11), (31, 15), (29, 15))
+]
+
 # Cost restraint for assignment 2
-restraint = int(input("Input your desired restraint value."))
+initial = font.render(f'Press 1 or 2 to begin program with specified environment!', True, (255, 255, 255))
+disprestraint = font.render(f'Enter restraint into the console!', True, (255, 255, 255))
+screen.blit(initial, (10,10))
+pygame.display.update()
+#restraint = int(input("Input your desired restraint value."))
 
 # Shows restraint on gui screen, and displays different results based on if a path is found or not
-score = font.render("Restraint: " + str(restraint), True, (255,255,255))
-nopath = font.render("Path Not Found with restraint of: " + str(restraint), True, (255,0,0))
-pathfound = font.render("Path found with restraint of: " + str(restraint), True, (0,255,0))
-screen.blit(score,(10,10))
+
 
 # List of all vertices and edges for all shapes
 vertices, edges = [], []
-shape1 = shapes[0]
-shape2 = shapes[1]
+# shape1 = shapes[0]
+# shape2 = shapes[1]
 
-# Loop through shapes and draw to screen
-for shape in shapes:
-    shape.draw()
-    for vertex in shape.vertices:
-        vertices.append(vertex)
-    for edge in shape.edges:
-        edges.append(edge)
-
-# Draws start and end circles
-pygame.draw.circle(screen, (0, 255, 0), start, screen_size[0] // 100)
-pygame.draw.circle(screen, (255, 0, 0), end, screen_size[0] // 100)
-
-# Adds goal location to vertices list so it can be explored
-vertices.append(end)
-
-# Runs the astar algorithm and stores the best path in a variable
-path = a_star(start, end, vertices, edges, shapes, restraint)
-
-# Draws the best path to the screen if it is found
-if path:
-    # Leaves best path on screen along with all other paths the algorithm tried to take for three seconds,
-    # Then redraws the shapes along with only the best paths
-    pygame.draw.lines(screen, GREEN, False, path, 3)
-    time.sleep(3)
-    screen.fill((0, 0, 0))
-    pygame.draw.circle(screen, (0, 255, 0), start, screen_size[0] // 100)
-    pygame.draw.circle(screen, (255, 0, 0), end, screen_size[0] // 100)
-    for shape in shapes:
-        shape.draw()
-    pygame.draw.lines(screen, GREEN, False, path, 3)
-    screen.blit(pathfound, (10, 10))
-    pygame.display.update()
-else:
-    # Tells the user that no path was found under the restraint
+def pathswitch(environment, newstart, newend, newshapes):
     screen.fill((0,0,0))
-    screen.blit(nopath, (10, 10))
-    pygame.draw.circle(screen, (0, 255, 0), start, screen_size[0] // 100)
-    pygame.draw.circle(screen, (255, 0, 0), end, screen_size[0] // 100)
-    for shape in shapes:
-        shape.draw()
+    screen.blit(disprestraint, (10,10))
     pygame.display.update()
+    newrestraint = int(input(f"Enter a restraint value for environment {environment}: "))
+    score = font.render("Restraint: " + str(newrestraint), True, (255, 255, 255))
+    nopath = font.render("Path Not Found with restraint of: " + str(newrestraint), True, (255, 0, 0))
+    pathfound = font.render("Path found with restraint of: " + str(newrestraint), True, (0, 255, 0))
+    screen.fill((0,0,0))
+    screen.blit(score, (10, 10))
+    for shape in newshapes:
+        shape.draw()
+    pygame.draw.circle(screen, (0, 255, 0), newstart, screen_size[0] // 100)
+    pygame.draw.circle(screen, (255, 0, 0), newend, screen_size[0] // 100)
+    newpath = a_star(newstart, newend, vertices, edges, newshapes, newrestraint)
+
+    if newpath:
+        # Leaves best path on screen along with all other paths the algorithm tried to take for three seconds,
+        # Then redraws the shapes along with only the best paths
+        pygame.draw.lines(screen, GREEN, False, newpath, 3)
+        time.sleep(3)
+        screen.fill((0, 0, 0))
+        pygame.draw.circle(screen, (0, 255, 0), newstart, screen_size[0] // 100)
+        pygame.draw.circle(screen, (255, 0, 0), newend, screen_size[0] // 100)
+        for shape in newshapes:
+            shape.draw()
+        pygame.draw.lines(screen, GREEN, False, newpath, 3)
+        screen.blit(pathfound, (10, 10))
+        pygame.display.update()
+        time.sleep(5)
+        screen.fill((0,0,0))
+        screen.blit(initial, (10,10))
+        pygame.display.update()
+    else:
+        # Tells the user that no path was found under the restraint
+        screen.fill((0, 0, 0))
+        screen.blit(nopath, (10, 10))
+        pygame.draw.circle(screen, (0, 255, 0), newstart, screen_size[0] // 100)
+        pygame.draw.circle(screen, (255, 0, 0), newend, screen_size[0] // 100)
+        for shape in newshapes:
+            shape.draw()
+        pygame.display.update()
+        time.sleep(5)
+        screen.fill((0, 0, 0))
+        screen.blit(initial, (10, 10))
+        pygame.display.update()
+
+
 
 # Infinite pygame loop
 while running:
@@ -102,6 +123,27 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_1:
+                vertices, edges = [], []
+                for shape in shapes:
+                    shape.draw()
+                    for vertex in shape.vertices:
+                        vertices.append(vertex)
+                    for edge in shape.edges:
+                        edges.append(edge)
+                vertices.append(end1)
+                pathswitch(1, start1, end1, shapes)
+            if event.key == pygame.K_2:
+                vertices, edges = [], []
+                for shape in shapes2:
+                    shape.draw()
+                    for vertex in shape.vertices:
+                        vertices.append(vertex)
+                    for edge in shape.edges:
+                        edges.append(edge)
+                vertices.append(end2)
+                pathswitch(2, start2, end2, shapes2)
 
         # screen.blit(path)
         pygame.display.update()
