@@ -31,7 +31,7 @@ endrand = random.randint(1, 19)
 start = (2 * scalex, startrand * scaley)
 end = (34 * scalex, endrand * scaley)
 
-# List of different shape objects
+# Lists of different shape objects
 shapes = [
     shape((29, 12), (31, 15), (31, 18), (29, 19), (25, 18), (25, 15)),
     shape((5, 15), (5, 19), (17, 19), (17, 15)),
