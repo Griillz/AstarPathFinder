@@ -31,7 +31,7 @@ endrand = random.randint(1, 19)
 start = (2 * scalex, startrand * scaley)
 end = (34 * scalex, endrand * scaley)
 
-# Lists of different shape objects
+# First environment shapes
 shapes = [
     shape((29, 12), (31, 15), (31, 18), (29, 19), (25, 18), (25, 15)),
     shape((5, 15), (5, 19), (17, 19), (17, 15)),
@@ -42,7 +42,7 @@ shapes = [
     shape((11, 12), (13, 6), (15, 12)),
     shape((18, 13), (20, 18), (23, 16))
 ]
-
+# Second environment shapes
 shapes2 = [
     shape((5, 5), (10, 4), (15, 5), (13, 8), (10, 10), (10, 7), (5, 7)),
     shape((5, 9), (5, 13), (7, 13)),
@@ -58,21 +58,25 @@ initial = font.render(f'Press 1 or 2 to begin program with specified environment
 disprestraint = font.render(f'Enter restraint into the console!', True, (255, 255, 255))
 screen.blit(initial, (10,10))
 pygame.display.update()
-#restraint = int(input("Input your desired restraint value."))
-
-# Shows restraint on gui screen, and displays different results based on if a path is found or not
-
 
 # List of all vertices and edges for all shapes
 vertices, edges = [], []
-# shape1 = shapes[0]
-# shape2 = shapes[1]
+
 
 def pathswitch(environment, newstart, newend, newshapes):
     screen.fill((0,0,0))
     screen.blit(disprestraint, (10,10))
     pygame.display.update()
-    newrestraint = int(input(f"Enter a restraint value for environment {environment}: "))
+    newrestraint = None
+    while newrestraint is None:
+        try:
+            newrestraint = int(input(f"Enter a restraint value for environment {environment}: "))
+        except ValueError:
+            invalidrestraint = font.render("Make sure to enter a number for the restraint, try again!", True,(255, 255, 255))
+            screen.fill((0, 0, 0))
+            screen.blit(invalidrestraint, (10, 10))
+            pygame.display.update()
+
     score = font.render("Restraint: " + str(newrestraint), True, (255, 255, 255))
     nopath = font.render("Path Not Found with restraint of: " + str(newrestraint), True, (255, 0, 0))
     pathfound = font.render("Path found with restraint of: " + str(newrestraint), True, (0, 255, 0))
@@ -110,7 +114,7 @@ def pathswitch(environment, newstart, newend, newshapes):
         for shape in newshapes:
             shape.draw()
         pygame.display.update()
-        time.sleep(5)
+        time.sleep(10)
         screen.fill((0, 0, 0))
         screen.blit(initial, (10, 10))
         pygame.display.update()
