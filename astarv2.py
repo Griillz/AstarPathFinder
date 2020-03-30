@@ -20,7 +20,7 @@ def simplified_anytime(start, goal, vertices, edges, shapes, w, changew):
 
     heapq.heappush(openset, (start_node.f, start_node))
 
-    while len(openset) > 0 and last == False:
+    while len(openset) > 0 and not last:
         if w == 1:
             last = True
         newsolution, tempcost = a_star(start, goal, vertices, edges, shapes, w, openset)
