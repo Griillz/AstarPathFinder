@@ -111,7 +111,7 @@ def a_star(start, goal, vertices, edges, shapes, w, opensetpassed):
                     continue
             heapq.heappush(openset, (child_node.f, child_node))
 
-    return False
+    return None
 
 
 
