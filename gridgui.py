@@ -34,7 +34,6 @@ pygame.display.set_caption(("A* Shortest Pathfinder"))
 
 done = False
 
-clock = pygame.time.Clock()
 
 # Set the screen background
 screen.fill(BLACK)
@@ -59,17 +58,15 @@ for row in range(gridsize):
 pygame.display.flip()
 
 path = simplified_anytime(START, END, grid, w, changew, gridsize - 1, gridcopy)
-
-while not done:
-    for event in pygame.event.get():  # User did something
-        if event.type == pygame.QUIT:  # If user clicked close
-            done = True  # Flag that we are done so we exit this loop
-
-    # Limit to 60 frames per second
-    clock.tick(60)
-
-    # Go ahead and update the screen with what we've drawn.
-    pygame.display.flip()
+# print("what the fuck")
+# while not done:
+#     for event in pygame.event.get():  # User did something
+#         if event.type == pygame.QUIT:  # If user clicked close
+#             done = True  # Flag that we are done so we exit this loop
+#
+#
+#     # Go ahead and update the screen with what we've drawn.
+#     pygame.display.flip()
 
 # Be IDLE friendly. If you forget this line, the program will 'hang'
 # on exit.

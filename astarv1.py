@@ -25,36 +25,38 @@ def simplified_anytime(start, goal, points, w, changew, size, gridcopy):
         if w == 1:
             last = True
         newsolution, tempcost = a_star(start, goal, points, size, w, openset)
-        pygame.display.flip()
-    if w != 1:
-        screen.fill(BLACK)
-        for row in range(gridsize):
-            for column in range(gridsize):
-                color = WHITE
-                if gridcopy[row][column] == 1:
-                    color = BLACK
-                elif (row, column) == START:
-                    color = GREEN
-                elif (row, column) == END:
-                    color = RED
-                pygame.draw.rect(screen,
-                                 color,
-                                 [(MARGIN + WIDTH) * column + MARGIN,
-                                  (MARGIN + HEIGHT) * row + MARGIN,
-                                  WIDTH,
-                                  HEIGHT])
+        pygame.display.update()
+        if not last:
+            screen.fill(BLACK)
+            for row in range(gridsize):
+                for column in range(gridsize):
+                    color = WHITE
+                    if gridcopy[row][column] == 1:
+                        color = BLACK
+                    elif (row, column) == START:
+                        color = GREEN
+                    elif (row, column) == END:
+                        color = RED
+                    pygame.draw.rect(screen,
+                                     color,
+                                     [(MARGIN + WIDTH) * column + MARGIN,
+                                      (MARGIN + HEIGHT) * row + MARGIN,
+                                      WIDTH,
+                                      HEIGHT])
 
-        pygame.display.flip()
-        if newsolution is not None:
-            newcost = tempcost
-            incumbent = newsolution
-        else:
-            return incumbent
-        if(w > 1):
-            w = w - changew
-        for node in openset:
-            if node[1].f >= newcost:
-                openset.pop(openset.index(node))
+            pygame.display.update()
+            if newsolution is not None:
+                newcost = tempcost
+                incumbent = newsolution
+            else:
+                return incumbent
+            if(w > 1):
+                w = w - changew
+            for node in openset:
+                if node[1].f >= newcost:
+                    openset.pop(openset.index(node))
+
+            print("hi")
 
     return incumbent
 
@@ -72,7 +74,6 @@ def a_star(start, goal, points, size,  w, opensetpassed):
     openset = opensetpassed
     # pushes start node onto the open set
     heapq.heappush(openset, (start_node.f, start_node))
-    num = 0
 
     # Expands nodes in open set until there are none left, or the goal is reached
     while len(openset) > 0:
@@ -93,8 +94,10 @@ def a_star(start, goal, points, size,  w, opensetpassed):
                                   (MARGIN + HEIGHT) * current.position[0] + MARGIN,
                                   WIDTH,
                                   HEIGHT])
-                pygame.display.flip()
+                pygame.display.update()
+                pygame.event.pump()
                 current = current.parent
+            #time.sleep(2)
             return path[::-1], current_node.g
         else:
             # Draws the current path being explored in red to make it look cooler
@@ -109,15 +112,9 @@ def a_star(start, goal, points, size,  w, opensetpassed):
                                   WIDTH,
                                   HEIGHT])
                 current = current.parent
-                pygame.display.flip()
-            # if len(path) > 1:
-            #     pygame.draw.lines(screen, RED, False, path[::-1], 3)
-            #     # time.sleep(.05)
-            #     pygame.display.update()
-
+                pygame.event.pump()
         # gets list of vertices we can travel to from current position
-        children = genchildren(current_node, points, size, num)
-        num += 1
+        children = genchildren(current_node, points, size)
 
         # add children nodes to open set
         for point in children:
@@ -143,7 +140,7 @@ def a_star(start, goal, points, size,  w, opensetpassed):
 
 # Function for getting all possible children we can travel to at the current position
 
-def genchildren(current, points, size, num):
+def genchildren(current, points, size):
     possible = []
     x = current.position[0]
     y = current.position[1]
@@ -198,7 +195,7 @@ def genchildren(current, points, size, num):
             if points[x + 1][y] == 0:
                 possible.append((x + 1, y))
 
-            if points[(x + 1, y + 1)] == 0:
+            if points[x + 1][y + 1] == 0:
                 possible.append((x + 1, y + 1))
 
             if points[x][y + 1] == 0:

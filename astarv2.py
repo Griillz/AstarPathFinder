@@ -84,10 +84,10 @@ def a_star(start, goal, vertices, edges, shapes, w, opensetpassed):
             while current is not None:
                 path.append(current.position)
                 current = current.parent
-            # if len(path) > 1:
-            #     pygame.draw.lines(screen, RED, False, path[::-1], 3)
-            #     # time.sleep(.05)
-            #     pygame.display.update()
+            if len(path) > 1:
+                pygame.draw.lines(screen, RED, False, path[::-1], 3)
+                time.sleep(.05)
+                pygame.display.update()
 
         # gets list of vertices we can travel to from current position
         children = genchildren(current_node, vertices, edges, shapes, num)
