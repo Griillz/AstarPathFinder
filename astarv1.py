@@ -97,7 +97,7 @@ def a_star(start, goal, points, size,  w, opensetpassed):
                 pygame.display.update()
                 pygame.event.pump()
                 current = current.parent
-            #time.sleep(2)
+            time.sleep(2)
             return path[::-1], current_node.g
         else:
             # Draws the current path being explored in red to make it look cooler
@@ -126,8 +126,12 @@ def a_star(start, goal, points, size,  w, opensetpassed):
 
             # check if node in open or closed set
             for node in openset:
-                if child_node == node[1] and child_node.g > node[1].g:
-                    continue
+                #print("hi")
+                if child_node == node[1]:
+                    if child_node.g > node[1].g:
+                        continue
+                    else:
+                        child_node.g = node[1].g
 
             for node in closedset:
                 if child_node == node:
@@ -277,9 +281,11 @@ def genchildren(current, points, size):
 # Cost function for g scores
 def cost(current, vertex):
     price = math.sqrt(math.pow((current[0] - vertex[0]), 2) + math.pow((current[1] - vertex[1]), 2))
+    price = math.floor(price)
     return price
 
 # Heuristic function
 def heuristic(current, goal):
     h_score = math.sqrt(math.pow((goal[0] - current[0]), 2) + math.pow((goal[1] - current[1]), 2))
+    h_score = math.floor(h_score)
     return h_score
