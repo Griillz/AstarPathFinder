@@ -25,38 +25,56 @@ def simplified_anytime(start, goal, points, w, changew, size, gridcopy):
         if w == 1:
             last = True
         newsolution, tempcost = a_star(start, goal, points, size, w, openset)
+        for point in newsolution:
+            pygame.draw.rect(screen,
+                             GREEN,
+                             [(MARGIN + WIDTH) * point[1] + MARGIN,
+                              (MARGIN + HEIGHT) * point[0] + MARGIN,
+                              WIDTH,
+                              HEIGHT])
+            pygame.event.pump()
         pygame.display.update()
-        if not last:
-            screen.fill(BLACK)
-            for row in range(gridsize):
-                for column in range(gridsize):
-                    color = WHITE
-                    if gridcopy[row][column] == 1:
-                        color = BLACK
-                    elif (row, column) == START:
-                        color = GREEN
-                    elif (row, column) == END:
-                        color = RED
-                    pygame.draw.rect(screen,
-                                     color,
-                                     [(MARGIN + WIDTH) * column + MARGIN,
-                                      (MARGIN + HEIGHT) * row + MARGIN,
-                                      WIDTH,
-                                      HEIGHT])
+        time.sleep(2)
+        screen.fill(BLACK)
+        for row in range(gridsize):
+            for column in range(gridsize):
+                color = WHITE
+                if gridcopy[row][column] == 1:
+                    color = BLACK
+                elif (row, column) == START:
+                    color = GREEN
+                elif (row, column) == END:
+                    color = RED
+                pygame.draw.rect(screen,
+                                 color,
+                                 [(MARGIN + WIDTH) * column + MARGIN,
+                                  (MARGIN + HEIGHT) * row + MARGIN,
+                                  WIDTH,
+                                  HEIGHT])
 
+        if last:
+            for point in newsolution:
+                pygame.draw.rect(screen,
+                                 GREEN,
+                                 [(MARGIN + WIDTH) * point[1] + MARGIN,
+                                  (MARGIN + HEIGHT) * point[0] + MARGIN,
+                                  WIDTH,
+                                  HEIGHT])
+                pygame.event.pump()
             pygame.display.update()
-            if newsolution is not None:
-                newcost = tempcost
-                incumbent = newsolution
-            else:
-                return incumbent
-            if(w > 1):
-                w = w - changew
-            for node in openset:
-                if node[1].f >= newcost:
-                    openset.pop(openset.index(node))
+            time.sleep(6)
+        if newsolution is not None:
+            newcost = tempcost
+            incumbent = newsolution
+        else:
+            return incumbent
+        if(w > 1):
+            w = w - changew
+        for node in openset:
+            if node[1].f >= newcost:
+                openset.pop(openset.index(node))
 
-            print("hi")
+        print("hi")
 
     return incumbent
 
@@ -88,16 +106,7 @@ def a_star(start, goal, points, size,  w, opensetpassed):
             # Loops through the parents of the nodes back to the starting node
             while current is not None:
                 path.append(current.position)
-                pygame.draw.rect(screen,
-                                 GREEN,
-                                 [(MARGIN + WIDTH) * current.position[1] + MARGIN,
-                                  (MARGIN + HEIGHT) * current.position[0] + MARGIN,
-                                  WIDTH,
-                                  HEIGHT])
-                pygame.display.update()
-                pygame.event.pump()
                 current = current.parent
-            time.sleep(2)
             return path[::-1], current_node.g
         else:
             # Draws the current path being explored in red to make it look cooler
@@ -126,7 +135,6 @@ def a_star(start, goal, points, size,  w, opensetpassed):
 
             # check if node in open or closed set
             for node in openset:
-                #print("hi")
                 if child_node == node[1]:
                     if child_node.g > node[1].g:
                         continue
