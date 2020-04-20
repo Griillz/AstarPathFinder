@@ -18,13 +18,14 @@ def simplified_anytime(start, goal, points, w, changew, size, gridcopy):
     last = False
     start_node = Node(None, start)
     start_node.g = start_node.h = start_node.f = 0
+    setcheck = {start_node.position}
 
     heapq.heappush(openset, (start_node.f, start_node))
 
     while len(openset) > 0 and not last:
         if w == 1:
             last = True
-        newsolution, tempcost = a_star(start, goal, points, size, w, newcost)
+        newsolution, tempcost, setcheck = a_star(start, goal, points, size, w, newcost, setcheck)
         for point in newsolution:
             pygame.draw.rect(screen,
                              GREEN,
@@ -73,6 +74,7 @@ def simplified_anytime(start, goal, points, w, changew, size, gridcopy):
         for node in openset:
             if node[1].f >= newcost:
                 openset.pop(openset.index(node))
+                setcheck.remove(node[1].position)
 
         print("hi")
 
@@ -80,7 +82,7 @@ def simplified_anytime(start, goal, points, w, changew, size, gridcopy):
 
 
 # Main a star algorithm
-def a_star(start, goal, points, size,  w, costly):
+def a_star(start, goal, points, size,  w, costly, setcheck):
     # Create start and end node
     start_node = Node(None, start)
     start_node.g = start_node.h = start_node.f = 0
@@ -90,6 +92,7 @@ def a_star(start, goal, points, size,  w, costly):
     # Initialize both open and closed list
     closedset = []
     openset = []
+    setchecker = setcheck
     # pushes start node onto the open set
     heapq.heappush(openset, (start_node.f, start_node))
 
@@ -99,6 +102,7 @@ def a_star(start, goal, points, size,  w, costly):
         if len(openset) > (gridsize * gridsize):
             print(len(openset))
         current_node = heapq.heappop(openset)[1]
+        setchecker.remove(current_node.position)
         closedset.append(current_node)
 
         # Base case for finding the goal as a possible child
@@ -109,7 +113,7 @@ def a_star(start, goal, points, size,  w, costly):
             while current is not None:
                 path.append(current.position)
                 current = current.parent
-            return path[::-1], current_node.g
+            return path[::-1], current_node.g, setchecker
         else:
             # Draws the current path being explored in red to make it look cooler
             path = []
@@ -148,7 +152,9 @@ def a_star(start, goal, points, size,  w, costly):
                 if child_node.position == node.position:
                     continue
             if child_node.h + child_node.g < costly:
-                heapq.heappush(openset, (child_node.f, child_node))
+                if child_node.position not in setchecker:
+                    setchecker.add(child_node.position)
+                    heapq.heappush(openset, (child_node.f, child_node))
 
     return None
 
