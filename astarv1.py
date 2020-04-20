@@ -24,7 +24,7 @@ def simplified_anytime(start, goal, points, w, changew, size, gridcopy):
     while len(openset) > 0 and not last:
         if w == 1:
             last = True
-        newsolution, tempcost = a_star(start, goal, points, size, w, openset)
+        newsolution, tempcost = a_star(start, goal, points, size, w, newcost)
         for point in newsolution:
             pygame.draw.rect(screen,
                              GREEN,
@@ -80,7 +80,7 @@ def simplified_anytime(start, goal, points, w, changew, size, gridcopy):
 
 
 # Main a star algorithm
-def a_star(start, goal, points, size,  w, opensetpassed):
+def a_star(start, goal, points, size,  w, costly):
     # Create start and end node
     start_node = Node(None, start)
     start_node.g = start_node.h = start_node.f = 0
@@ -89,18 +89,20 @@ def a_star(start, goal, points, size,  w, opensetpassed):
 
     # Initialize both open and closed list
     closedset = []
-    openset = opensetpassed
+    openset = []
     # pushes start node onto the open set
     heapq.heappush(openset, (start_node.f, start_node))
 
     # Expands nodes in open set until there are none left, or the goal is reached
     while len(openset) > 0:
         # Get the current node with the lowest F score
+        if len(openset) > (gridsize * gridsize):
+            print(len(openset))
         current_node = heapq.heappop(openset)[1]
         closedset.append(current_node)
 
         # Base case for finding the goal as a possible child
-        if current_node == end_node:
+        if current_node.position == end_node.position:
             path = []
             current = current_node
             # Loops through the parents of the nodes back to the starting node
@@ -135,16 +137,18 @@ def a_star(start, goal, points, size,  w, opensetpassed):
 
             # check if node in open or closed set
             for node in openset:
-                if child_node == node[1]:
+                if child_node.position == node[1].position:
                     if child_node.g > node[1].g:
                         continue
                     else:
                         child_node.g = node[1].g
+                        continue
 
             for node in closedset:
-                if child_node == node:
+                if child_node.position == node.position:
                     continue
-            heapq.heappush(openset, (child_node.f, child_node))
+            if child_node.h + child_node.g < costly:
+                heapq.heappush(openset, (child_node.f, child_node))
 
     return None
 
@@ -289,11 +293,9 @@ def genchildren(current, points, size):
 # Cost function for g scores
 def cost(current, vertex):
     price = math.sqrt(math.pow((current[0] - vertex[0]), 2) + math.pow((current[1] - vertex[1]), 2))
-    price = math.floor(price)
     return price
 
 # Heuristic function
 def heuristic(current, goal):
     h_score = math.sqrt(math.pow((goal[0] - current[0]), 2) + math.pow((goal[1] - current[1]), 2))
-    h_score = math.floor(h_score)
     return h_score
