@@ -14,19 +14,24 @@ GREEN = (0,255,0)
 
 def simplified_anytime(start, goal, points, w, changew, size, gridcopy):
     newcost, openset, incumbent = math.inf, [], []
-
+    times = 0
     last = False
     start_node = Node(None, start)
     start_node.g = start_node.h = start_node.f = 0
-    setcheck = {start_node.position}
 
     heapq.heappush(openset, (start_node.f, start_node))
 
     while len(openset) > 0 and not last:
         if w == 1:
             last = True
-        newsolution, tempcost, setcheck = a_star(start, goal, points, size, w, newcost, setcheck)
-        for point in newsolution:
+        newsolution = a_star(start, goal, points, size, w, newcost, openset)
+        if newsolution is not None:
+            incumbent = newsolution[0]
+            print(incumbent)
+            newcost = newsolution[1]
+        else:
+            return incumbent
+        for point in incumbent:
             pygame.draw.rect(screen,
                              GREEN,
                              [(MARGIN + WIDTH) * point[1] + MARGIN,
@@ -54,35 +59,25 @@ def simplified_anytime(start, goal, points, w, changew, size, gridcopy):
                                   HEIGHT])
 
         if last:
-            for point in newsolution:
-                pygame.draw.rect(screen,
-                                 GREEN,
-                                 [(MARGIN + WIDTH) * point[1] + MARGIN,
-                                  (MARGIN + HEIGHT) * point[0] + MARGIN,
-                                  WIDTH,
-                                  HEIGHT])
-                pygame.event.pump()
-            pygame.display.update()
             time.sleep(6)
-        if newsolution is not None:
-            newcost = tempcost
-            incumbent = newsolution
-        else:
-            return incumbent
         if(w > 1):
             w = w - changew
-        for node in openset:
-            if node[1].f >= newcost:
-                openset.pop(openset.index(node))
-                setcheck.remove(node[1].position)
+            for node in openset:
+                node[1].f = node[1].g + (node[1].h * w)
+
+
+        count = 0
+        for item in openset:
+            count = count + 1
+            if openset[count][0] >= newcost:
+                del openset[count]
+                count = count - 1
 
         print("hi")
 
-    return incumbent
-
 
 # Main a star algorithm
-def a_star(start, goal, points, size,  w, costly, setcheck):
+def a_star(start, goal, points, size, w, costly, open):
     # Create start and end node
     start_node = Node(None, start)
     start_node.g = start_node.h = start_node.f = 0
@@ -91,8 +86,7 @@ def a_star(start, goal, points, size,  w, costly, setcheck):
 
     # Initialize both open and closed list
     closedset = []
-    openset = []
-    setchecker = setcheck
+    openset = open
     # pushes start node onto the open set
     heapq.heappush(openset, (start_node.f, start_node))
 
@@ -102,7 +96,6 @@ def a_star(start, goal, points, size,  w, costly, setcheck):
         if len(openset) > (gridsize * gridsize):
             print(len(openset))
         current_node = heapq.heappop(openset)[1]
-        setchecker.remove(current_node.position)
         closedset.append(current_node)
 
         # Base case for finding the goal as a possible child
@@ -113,7 +106,7 @@ def a_star(start, goal, points, size,  w, costly, setcheck):
             while current is not None:
                 path.append(current.position)
                 current = current.parent
-            return path[::-1], current_node.g, setchecker
+            return path[::-1], current_node.g
         else:
             # Draws the current path being explored in red to make it look cooler
             path = []
@@ -133,6 +126,7 @@ def a_star(start, goal, points, size,  w, costly, setcheck):
 
         # add children nodes to open set
         for point in children:
+            skip = False
             child_node = Node(current_node, point)
             # calculate scores
             child_node.g = cost(current_node.position, point) + current_node.g
@@ -141,7 +135,8 @@ def a_star(start, goal, points, size,  w, costly, setcheck):
 
             # check if node in open or closed set
             for node in openset:
-                if child_node.position == node[1].position:
+                if child_node == node[1]:
+                    skip = True
                     if child_node.g > node[1].g:
                         continue
                     else:
@@ -149,12 +144,13 @@ def a_star(start, goal, points, size,  w, costly, setcheck):
                         continue
 
             for node in closedset:
-                if child_node.position == node.position:
+                if child_node == node:
+                    skip = True
                     continue
-            if child_node.h + child_node.g < costly:
-                if child_node.position not in setchecker:
-                    setchecker.add(child_node.position)
-                    heapq.heappush(openset, (child_node.f, child_node))
+
+            if skip:
+                continue
+            heapq.heappush(openset, (child_node.f, child_node))
 
     return None
 
